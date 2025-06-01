@@ -76,6 +76,7 @@ public:
 			{
 				//first landa
 				std::set<nfa_node*> starting_landa_connected_nodes;
+				starting_landa_connected_nodes.insert(node_item);
 				std::queue<nfa_node*> landa_unvisited_nodes;
 				for (auto landa_connection_node : node_item->landa_nonnections)
 				{
@@ -214,8 +215,10 @@ public:
 			}
 		}
 		
-		
-		
+		for (auto item:this->alphabet)
+		{
+			return_dfa_machin->alphabet.push_back(item);
+		}	
 		
 		//deleting table
 		for (auto item : all_nodes)
