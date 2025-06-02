@@ -290,4 +290,9 @@ int main()
 
 		}
 	}
+	std::cout<<"final nodes"<<std::endl;
+	for (auto item:dfa_m->final_nodes)
+	{
+		std::cout << item->name << std::endl;
+	}
 }
