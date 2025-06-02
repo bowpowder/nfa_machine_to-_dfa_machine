@@ -9,7 +9,7 @@ class nfa_node
 public:
 	nfa_node(std::string);
 	~nfa_node();
-	std::map<char, std::list<nfa_node*>> none_landa_connections;	
+	std::map<char, std::list<nfa_node*>> none_landa_connections;
 	std::list<nfa_node*> landa_nonnections;
 	std::string name;
 private:
@@ -18,14 +18,14 @@ private:
 class dfa_node
 {
 public:
-	dfa_node(std::string );
+	dfa_node(std::string);
 	~dfa_node();
-	std::map<char,dfa_node*> none_landa_connections;
+	std::map<char, dfa_node*> none_landa_connections;
 	std::string name;
 private:
 
 };
-dfa_node::dfa_node(std::string name_ = "unidentified"):name(name_)
+dfa_node::dfa_node(std::string name_ = "unidentified") :name(name_)
 {
 }
 
@@ -33,7 +33,7 @@ dfa_node::~dfa_node()
 {
 }
 
-nfa_node::nfa_node(std::string name_ = "unidentified"):name(name_)
+nfa_node::nfa_node(std::string name_ = "unidentified") :name(name_)
 {
 }
 
@@ -47,7 +47,7 @@ public:
 	~dfa_machine();
 	std::list<dfa_node*> final_nodes;
 	dfa_node* starting_node;
-	std::list<char> alphabet;
+	std::set<char> alphabet;
 	std::list<dfa_node*> all_nodes;
 	void name_nodes()
 	{
@@ -77,12 +77,12 @@ public:
 	~nfa_machine();
 	std::list<nfa_node*> final_nodes;
 	nfa_node* starting_node;
-	std::list<char> alphabet;
+	std::set<char> alphabet;
 	std::list<nfa_node*> all_nodes;
 	void name_nodes()
 	{
 		int i = 0;
-		for (auto item:all_nodes)
+		for (auto item : all_nodes)
 		{
 
 			item->name = ("q" + std::to_string(i));
@@ -102,11 +102,11 @@ public:
 				std::queue<nfa_node*> landa_unvisited_nodes;
 				for (auto landa_connection_node : node_item->landa_nonnections)
 				{
-					if (starting_landa_connected_nodes.find(landa_connection_node)== starting_landa_connected_nodes.end())
+					if (starting_landa_connected_nodes.find(landa_connection_node) == starting_landa_connected_nodes.end())
 					{
 						starting_landa_connected_nodes.insert(landa_connection_node);
 						landa_unvisited_nodes.push(landa_connection_node);
-					}					
+					}
 				}
 				while (!landa_unvisited_nodes.empty())
 				{
@@ -130,8 +130,8 @@ public:
 						{
 							(*table[node_item])[symbol].insert(symbol_connoction_node);
 							landa_unvisited_nodes.push(symbol_connoction_node);
-						}					
-						
+						}
+
 					}
 				}
 				while (!landa_unvisited_nodes.empty())
@@ -147,10 +147,10 @@ public:
 						}
 					}
 				}
-				
-					
-					
-					
+
+
+
+
 			}
 		}
 		//starting node		
@@ -160,9 +160,9 @@ public:
 		std::set< std::set<nfa_node*>> nodes_node_sets;
 		std::map< std::set<nfa_node*>, dfa_node*> dfa_node_map;
 		dfa_node_map[{this->starting_node}] = return_dfa_machin->starting_node;
-		nodes_node_sets.insert({ this->starting_node });		
-		std::set<nfa_node*> node_set;		
-		std::queue< std::set<nfa_node*>> unvisited_dfa_nodes;		
+		nodes_node_sets.insert({ this->starting_node });
+		std::set<nfa_node*> node_set;
+		std::queue< std::set<nfa_node*>> unvisited_dfa_nodes;
 		for (auto symbol : alphabet)
 		{
 			node_set.clear();
@@ -171,7 +171,7 @@ public:
 			if (!nodes_node_sets.count(node_set))
 			{
 				nodes_node_sets.insert(node_set);
-				dfa_node_map[node_set] = new dfa_node();				
+				dfa_node_map[node_set] = new dfa_node();
 				return_dfa_machin->all_nodes.push_back(dfa_node_map[node_set]);
 				unvisited_dfa_nodes.push(node_set);
 				for (auto* nfa_final_node : this->final_nodes)
@@ -192,19 +192,19 @@ public:
 					}
 				}
 			}
-			return_dfa_machin->starting_node->none_landa_connections[symbol] = dfa_node_map[node_set];			
-					
+			return_dfa_machin->starting_node->none_landa_connections[symbol] = dfa_node_map[node_set];
+
 		}
 		//other nodes
 		while (!unvisited_dfa_nodes.empty())
 		{
 			auto front_dfa_node_item = unvisited_dfa_nodes.front();
 			unvisited_dfa_nodes.pop();
-			
+
 			for (auto symbol : alphabet)
 			{
 				node_set.clear();
-				for (auto* item: front_dfa_node_item)
+				for (auto* item : front_dfa_node_item)
 				{
 					auto other_set = (*table[item])[symbol];
 					node_set.insert(other_set.begin(), other_set.end());
@@ -215,14 +215,14 @@ public:
 					dfa_node_map[node_set] = new dfa_node();
 					return_dfa_machin->all_nodes.push_back(dfa_node_map[node_set]);
 					unvisited_dfa_nodes.push(node_set);
-					for (auto* nfa_final_node : this->final_nodes)					
+					for (auto* nfa_final_node : this->final_nodes)
 					{
 						bool found = false;
 						for (auto* posible_final_node : node_set)
-						{							
-							if (nfa_final_node== posible_final_node)
+						{
+							if (nfa_final_node == posible_final_node)
 							{
-								return_dfa_machin->final_nodes.push_back(dfa_node_map[node_set]);								
+								return_dfa_machin->final_nodes.push_back(dfa_node_map[node_set]);
 								found = true;
 								break;
 							}
@@ -236,12 +236,10 @@ public:
 				dfa_node_map[front_dfa_node_item]->none_landa_connections[symbol] = dfa_node_map[node_set];
 			}
 		}
+					
+		return_dfa_machin->alphabet.insert(this->alphabet.begin(),this->alphabet.end());
 		
-		for (auto item:this->alphabet)
-		{
-			return_dfa_machin->alphabet.push_back(item);
-		}	
-		
+
 		//deleting table
 		for (auto item : all_nodes)
 		{
@@ -265,11 +263,11 @@ int main()
 {
 	//example 1
 	nfa_machine nfa_m;
-	nfa_m.alphabet.push_back('0');
-	nfa_m.alphabet.push_back('1');
+	nfa_m.alphabet.insert('0');
+	nfa_m.alphabet.insert('1');
 	nfa_m.starting_node = new nfa_node();
 	nfa_m.all_nodes.push_back(nfa_m.starting_node);
-	nfa_m.starting_node->none_landa_connections['0'].push_back(nfa_m.starting_node);	
+	nfa_m.starting_node->none_landa_connections['0'].push_back(nfa_m.starting_node);
 	nfa_node* nfa_node_ptr = new nfa_node();
 	nfa_m.starting_node->none_landa_connections['0'].push_back(nfa_node_ptr);
 	nfa_m.starting_node->none_landa_connections['1'].push_back(nfa_node_ptr);
@@ -281,15 +279,15 @@ int main()
 	nfa_node_ptr->none_landa_connections['1'].push_back(nfa_node_ptr2);
 	nfa_node_ptr2->none_landa_connections['1'].push_back(nfa_node_ptr2);
 	nfa_m.name_nodes();
-	dfa_machine* dfa_m = nfa_m.to_dfa();	
-	dfa_m->name_nodes();	
-	for (auto node_item:dfa_m->all_nodes)
+	dfa_machine* dfa_m = nfa_m.to_dfa();
+	dfa_m->name_nodes();
+	for (auto node_item : dfa_m->all_nodes)
 	{
-		std::cout << "node name: " << node_item->name <<" connections:" << std::endl;
-		for (auto symbol:dfa_m->alphabet)
+		std::cout << "node name: " << node_item->name << " connections:" << std::endl;
+		for (auto symbol : dfa_m->alphabet)
 		{
-			std::cout << symbol << ':' <<node_item->none_landa_connections[symbol]->name<< std::endl;
-			
+			std::cout << symbol << ':' << node_item->none_landa_connections[symbol]->name << std::endl;
+
 		}
 	}
 }
