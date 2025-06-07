@@ -43,12 +43,13 @@ nfa_node::~nfa_node()
 class dfa_machine
 {
 public:
-	dfa_machine();
+	dfa_machine(bool delete_nodes_on_deletion = true);
 	~dfa_machine();
 	std::list<dfa_node*> final_nodes;
 	dfa_node* starting_node;
 	std::set<char> alphabet;
 	std::list<dfa_node*> all_nodes;
+	bool node_deletion_bool;
 	void name_nodes()
 	{
 		int i = 0;
@@ -63,22 +64,30 @@ private:
 
 };
 
-dfa_machine::dfa_machine()
+dfa_machine::dfa_machine(bool delete_nodes_on_deletion):node_deletion_bool(delete_nodes_on_deletion)
 {
 }
 
 dfa_machine::~dfa_machine()
 {
+	if (node_deletion_bool)
+	{
+		for (auto item: this->all_nodes)
+		{
+			delete item;
+		}
+	}
 }
 class nfa_machine
 {
 public:
-	nfa_machine();
+	nfa_machine(bool delete_nodes_on_deletion=true);
 	~nfa_machine();
 	std::list<nfa_node*> final_nodes;
 	nfa_node* starting_node;
 	std::set<char> alphabet;
 	std::list<nfa_node*> all_nodes;
+	bool node_deletion_bool;
 	void name_nodes()
 	{
 		int i = 0;
@@ -251,12 +260,19 @@ private:
 
 };
 
-nfa_machine::nfa_machine()
+nfa_machine::nfa_machine(bool delete_nodes_on_deletion):node_deletion_bool(delete_nodes_on_deletion)
 {
 }
 
 nfa_machine::~nfa_machine()
 {
+	if (node_deletion_bool)
+	{
+		for (auto item : this->all_nodes)
+		{
+			delete item;
+		}		
+	}
 }
 
 int main()
